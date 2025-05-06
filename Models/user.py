@@ -12,5 +12,5 @@ class User(db.Model):
         return bcrypt.checkpw(password.encode('utf-8'), self.password_hash)
     
     is_freelancer = db.Column(db.Boolean, default=False)
-    freelancer_profile = db.relationship('FreelancerProfile', backref='user', uselist=False)
+    freelancer_profile = db.relationship('Freelancer', backref='user', uselist=False)
     client_profile = db.relationship('ClientProfile', backref='user', uselist=False)

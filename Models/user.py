@@ -1,6 +1,7 @@
 from ..Extensions import db
 import bcrypt
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False)
     password_hash = db.Column(db.LargeBinary(60), nullable=False)

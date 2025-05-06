@@ -1,7 +1,6 @@
-from user import User
 from ..Extensions import db
 
-class Freelancer(User):
+class Freelancer(db.Model):
     skills = db.Column(db.String(50), nullable=True)
     bio = db.Column(db.Text, nullable=True)  
     skills = db.Column(db.String(255), nullable=True) 
@@ -9,3 +8,4 @@ class Freelancer(User):
     location = db.Column(db.String(100), nullable=True)
     rating = db.Column(db.Float, default=0.0) 
     completed_projects = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

@@ -51,3 +51,44 @@ def get_user_by_id(id):
             'errors': 'None',
             'data': user.to_dict(),
         }, 200
+    
+def update_user(data):
+    user_id = data.get("user_id")
+    user = User.query.get(user_id)
+    if not user:
+        raise NotFoundError(field="id", value=user_id)
+    
+    username = data.get("username")
+    email = data.get('email')
+    password = data.get('password')
+    is_freelancer = data.get('is_freelancer')
+    
+    
+    if username is not None:
+        user.username = username
+    if email is not None:
+        user.email = email
+    if password is not None:
+        user.set_password(password)
+    if is_freelancer is not None:
+        user.is_freelancer = is_freelancer
+
+    db.session.commit()
+    return {
+            'message': f'A user with id {user.id} was found and edited',
+            'errors': 'None',
+            'data': user.to_dict(),
+        }, 200
+
+def remove_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        raise NotFoundError(field="id", value=user_id)
+
+    db.session.delete(user)
+    db.session.commit()
+    return {
+            'message': f'A user with id {user.id} was found and deleted',
+            'errors': 'None',
+            'data': user.to_dict(),
+        }, 200

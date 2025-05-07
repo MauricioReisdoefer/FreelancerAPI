@@ -1,7 +1,7 @@
 from ..Models import User
 from ..Extensions import db
 from flask import request, jsonify
-from error import ValidationError, ConflictError
+from error import ValidationError, ConflictError, NotFoundError
 
 def create_user(data):
     username = data.get("username")
@@ -31,4 +31,23 @@ def create_user(data):
     
     return {'message':'Usuário Criado com Sucesso',
             'errors': None,
-            'data': new_user.to_dict()}
+            'data': new_user.to_dict()
+            }, 200
+    
+def get_all_users():
+    all_users = User.query.all()
+    return {
+        'message': 'All Users Found',
+        'errors': 'None',
+        'data': [user.to_dict() for user in all_users]
+    }, 200
+    
+def get_user_by_id(id):
+    user = User.query.get(id)
+    if not user:
+        raise NotFoundError(field="id", value=id)
+    return {
+            'message': 'A user was found',
+            'errors': 'None',
+            'data': user.to_dict(),
+        }, 200

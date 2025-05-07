@@ -5,3 +5,4 @@
 - message
 - errors
 - data
+- status

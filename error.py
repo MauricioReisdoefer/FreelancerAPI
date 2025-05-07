@@ -60,3 +60,26 @@ class ConflictError(AppError):
         if self.fields:
             data['fields'] = self.fields
         return data
+    
+class NotFoundError(AppError):
+    """
+    Classe de erro para recursos não encontrados (HTTP 404).
+
+    Esse erro ocorre quando um recurso solicitado (como um usuário, projeto ou item)
+    não existe ou não pôde ser localizado com os critérios fornecidos.
+
+    :param field: Campo usado na busca (ex: 'id', 'username').
+    :param value: Valor buscado no campo (ex: 42, 'joao123').
+    :param message: Mensagem principal do erro (padrão: 'Recurso não encontrado').
+    :param payload: Dados adicionais opcionais a serem incluídos na resposta de erro.
+    """
+    def __init__(self, field=None, value=None, message="Recurso não encontrado", payload=None):
+        super().__init__(message, status_code=404, payload=payload)
+        self.field = field
+        self.value = value
+
+    def to_dict(self):
+        data = super().to_dict()
+        if self.field and self.value is not None:
+            data['not_found'] = {self.field: self.value}
+        return data

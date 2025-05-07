@@ -21,6 +21,9 @@ class AppError(Exception):
 class ValidationError(AppError):
     """
     Classe de erro para erros de validação de dados de entrada.
+    
+    Esse erro ocorre quando os dados fornecidos pelo usuário não foram corretamente preenchidos,
+    estão ausentes ou estão em formato inválido, impedindo o processamento da requisição.
 
     :parameter fields: Dicionário com os campos que estão ausentes, inválidos ou com erro.
     :parameter message: Mensagem principal do erro (padrão: 'Dados inválidos ou incompletos').
@@ -30,6 +33,28 @@ class ValidationError(AppError):
         super().__init__(message, status_code=400, payload=payload)
         self.fields = fields
         
+    def to_dict(self):
+        data = super().to_dict()
+        if self.fields:
+            data['fields'] = self.fields
+        return data
+    
+class ConflictError(AppError):
+    """
+    Classe de erro para conflitos de estado do recurso (HTTP 409).
+
+    Esse erro ocorre quando a requisição é válida, mas não pode ser processada
+    porque entraria em conflito com o estado atual do servidor. Exemplo típico:
+    tentativa de criar um recurso já existente (como um email duplicado).
+
+    :param fields: Dicionário com os campos que causaram o conflito.
+    :param message: Mensagem principal do erro (padrão: 'Conflito com o estado atual do recurso').
+    :param payload: Dados adicionais opcionais a serem incluídos na resposta de erro.
+    """
+    def __init__(self, fields=None, message="Conflito com o estado atual do recurso", payload=None):
+        super().__init__(message, status_code=409, payload=payload)
+        self.fields = fields
+
     def to_dict(self):
         data = super().to_dict()
         if self.fields:

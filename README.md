@@ -17,8 +17,7 @@ Todas as respostas da API seguem o seguinte padrão JSON:
 {
   "message": "Descrição do resultado da operação",
   "errors": "Erros encontrados (ou null)",
-  "data": "Conteúdo retornado pela operação",
-  "status": 200
+  "data": "Conteúdo retornado pela operação"
 }
 ```
 

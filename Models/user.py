@@ -1,4 +1,6 @@
 from ..Extensions import db
+from .freelancer import Freelancer
+from .client import ClientProfile
 import bcrypt
 class User(db.Model):
     __tablename__ = 'user'

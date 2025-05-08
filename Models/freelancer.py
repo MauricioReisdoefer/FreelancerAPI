@@ -12,3 +12,15 @@ class Freelancer(db.Model):
     location = db.Column(db.String(100), nullable=True)
     rating = db.Column(db.Float, default=0.0)
     completed_projects = db.Column(db.Integer, default=0)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "skills": self.skills,
+            "bio": self.bio,
+            "availability": self.availability,
+            "location": self.location,
+            "rating": self.rating,
+            "completed_projects": self.completed_projects
+        }

@@ -6,7 +6,7 @@ from error import ValidationError, NotFoundError
 def create_freelancer(data):
     user_id = data.get("user_id")
     if not user_id:
-        raise ValidationError(fields=user_id)
+        raise ValidationError(fields={"user_id":user_id})
     
     skills = data.get("skills")
     bio = data.get("bio")
@@ -34,7 +34,7 @@ def create_freelancer(data):
 def get_freelancer_profile(user_id):
     user_freelancer = Freelancer.query.filter_by(user_id=user_id).first()
     if not user_freelancer:
-        raise NotFoundError(field=user_id)
+        raise NotFoundError(field={"user_id":user_id})
     return {
         "message":f"Freelancer com user_id {user_id} Encontrado com Sucesso",
         "errors":"None",
@@ -54,7 +54,7 @@ def get_all_freelancer_profiles():
 def update_freelancer(user_id, data):
     freelancer = Freelancer.query.filter_by(user_id=user_id).first()
     if not freelancer:
-        raise NotFoundError(field=user_id)
+        raise NotFoundError(field={"user_id":user_id})
 
     if "skills" in data:
         freelancer.skills = data["skills"]
@@ -80,7 +80,7 @@ def update_freelancer(user_id, data):
 def remove_freelancer(user_id):
     freelancer = Freelancer.query.filter_by(user_id=user_id).first()
     if not freelancer:
-        raise NotFoundError(field=user_id)
+        raise NotFoundError(field={"user_id":user_id})
 
     db.session.delete(freelancer)
     db.session.commit()

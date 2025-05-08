@@ -26,3 +26,8 @@ def create_client(data):
         "errors":"None",
         "data":new_client.to_dict()
     }
+
+def get_client_profile(user_id):
+    user_client = ClientProfile.query.filter_by(user_id=user_id).first()
+    if not user_client:
+        raise NotFoundError(field={"user_id":user_id})

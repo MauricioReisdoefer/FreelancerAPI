@@ -12,19 +12,18 @@ def create_user(data):
     password = data.get('password')
     is_freelancer = data.get('is_freelancer', True)
     
-    missing_fields = []
+    missing_fields = {}
     if not username:
-        missing_fields.append("username")
+        missing_fields["username"] = None
     if not email:
-        missing_fields.append("email")
+        missing_fields["email"] = None
     if not password:
-        missing_fields.append("password")
-
+        missing_fields["password"] = None
     if missing_fields:
         raise ValidationError(fields=missing_fields)
 
     if User.query.filter_by(email=email).first():
-        raise ConflictError(fields=["email"], message="Email já está em uso.")
+        raise ConflictError(fields={"email":email}, message="Email já está em uso.")
             
     password_hash = User.create_password(password)
     new_user = User(password_hash=password_hash, username=username, email=email, is_freelancer=is_freelancer)

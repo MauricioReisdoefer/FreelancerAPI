@@ -1,7 +1,7 @@
 from ..Models import Freelancer
 from ..Extensions import db
 from flask import request, jsonify
-from error import ValidationError, ConflictError, NotFoundError, UnauthorizedError
+from error import ValidationError, NotFoundError
 
 def create_freelancer(data):
     user_id = data.get("user_id")
@@ -56,7 +56,6 @@ def update_freelancer(user_id, data):
     if not freelancer:
         raise NotFoundError(field=user_id)
 
-    # Atualiza apenas os campos fornecidos em 'data'
     if "skills" in data:
         freelancer.skills = data["skills"]
     if "bio" in data:

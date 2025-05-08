@@ -83,3 +83,15 @@ class NotFoundError(AppError):
         if self.field and self.value is not None:
             data['not_found'] = {self.field: self.value}
         return data
+class UnauthorizedError(AppError):
+    """
+    Classe de erro para acessos não autorizados (HTTP 401).
+
+    Esse erro ocorre quando o usuário não está autenticado ou não possui
+    permissões suficientes para acessar o recurso solicitado.
+
+    :param message: Mensagem principal do erro (padrão: 'Acesso não autorizado').
+    :param payload: Dados adicionais opcionais a serem incluídos na resposta de erro.
+    """
+    def __init__(self, message="Acesso não autorizado", payload=None):
+        super().__init__(message, status_code=401, payload=payload)

@@ -1,7 +1,10 @@
 from ..Models import User
 from ..Extensions import db
 from flask import request, jsonify
-from error import ValidationError, ConflictError, NotFoundError
+from error import ValidationError, ConflictError, NotFoundError, UnauthorizedError
+import datetime
+import jwt
+from Extensions import get_token_env_var
 
 def create_user(data):
     username = data.get("username")
@@ -92,3 +95,24 @@ def remove_user(user_id):
             'errors': 'None',
             'data': user.to_dict(),
         }, 200
+    
+def login_user(email, password):
+    user = User.query.get(email=email)
+    if user is None:
+        raise NotFoundError(field="email", value=email)
+    
+    if not user.check_password(password):
+        raise UnauthorizedError(payload=password)
+    
+    payload = {
+        'sub': user.email, 
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  
+    }
+    
+    SECRET_KEY = get_token_env_var()
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+    return {
+        'message': 'Login bem-sucedido!',
+        'token': token
+    }

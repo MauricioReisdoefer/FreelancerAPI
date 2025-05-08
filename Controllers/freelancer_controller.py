@@ -50,3 +50,44 @@ def get_all_freelancer_profiles():
         "errors":"None",
         "data":[frelan.to_dict() for frelan in all_freelancers]
     }
+    
+def update_freelancer(user_id, data):
+    freelancer = Freelancer.query.filter_by(user_id=user_id).first()
+    if not freelancer:
+        raise NotFoundError(field=user_id)
+
+    # Atualiza apenas os campos fornecidos em 'data'
+    if "skills" in data:
+        freelancer.skills = data["skills"]
+    if "bio" in data:
+        freelancer.bio = data["bio"]
+    if "availability" in data:
+        freelancer.avaliability = data["availability"]
+    if "location" in data:
+        freelancer.location = data["location"]
+    if "rating" in data:
+        freelancer.rating = data["rating"]
+    if "completed_projects" in data:
+        freelancer.completed_projects = data["completed_projects"]
+
+    db.session.commit()
+
+    return {
+        "message": f"Freelancer com user_id {user_id} atualizado com sucesso",
+        "errors": "None",
+        "data": freelancer.to_dict()
+    }
+
+def remove_freelancer(user_id):
+    freelancer = Freelancer.query.filter_by(user_id=user_id).first()
+    if not freelancer:
+        raise NotFoundError(field=user_id)
+
+    db.session.delete(freelancer)
+    db.session.commit()
+
+    return {
+        "message": f"Freelancer com user_id {user_id} removido com sucesso",
+        "errors": "None",
+        "data": None
+    }

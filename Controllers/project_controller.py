@@ -65,3 +65,42 @@ def find_all_projects():
     if not projects:
         raise NotFoundError()
     return [project.to_dict() for project in projects]
+
+def remove_project(project_id):
+    project = Project.query.filter_by(id=project_id).first()
+    if not project:
+        raise NotFoundError(field="ID", value=project_id)
+    db.session.delete(project)
+    db.session.commit()
+    return {
+        "message": f"Projeto com ID {project_id} removido com sucesso.",
+        "errors": "None",
+        "data":None
+    }, 200
+    
+def update_project(project_id, data):
+    project = Project.query.filter_by(id=project_id).first()
+    if not project:
+        raise NotFoundError(field="ID", value=project_id)
+
+    title = data.get("titulo")
+    descricao = data.get("descricao")
+    preco = data.get("preco")
+    prazo_dias = data.get("prazo_dias")
+
+    if title is not None:
+        project.titulo = title
+    if descricao is not None:
+        project.descricao = descricao
+    if preco is not None:
+        project.preco = preco
+    if prazo_dias is not None:
+        project.prazo_dias = prazo_dias
+
+    db.session.commit()
+
+    return {
+        "message": f"Projeto com ID {project_id} atualizado com sucesso.",
+        "errors": "None",
+        "data": project.to_dict()
+    }, 200

@@ -15,3 +15,4 @@ class ClientProfile(db.Model):
             "company_name": self.company_name,
             "bio": self.bio,
         }
+        

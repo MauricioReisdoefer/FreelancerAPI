@@ -25,9 +25,9 @@ def create_client(data):
         "message":f"Client with user_id {user_id} sucefully created",
         "errors":"None",
         "data":new_client.to_dict()
-    }
+    }, 200
 
-def get_client_profile(user_id):
+def get_client_profile_by_user_id(user_id):
     user_client = ClientProfile.query.filter_by(user_id=user_id).first()
     if not user_client:
         raise NotFoundError(field={"user_id":user_id})
@@ -35,7 +35,7 @@ def get_client_profile(user_id):
         "message": f"Client with user_id {user_id} was found",
         "errors":"None",
         "data":user_client.to_dict()
-    }
+    }, 200
 
 def get_all_clients():
     clients = ClientProfile.query.all()
@@ -45,7 +45,7 @@ def get_all_clients():
         "message":"All clients were found",
         "errors":"None",
         "data":[client.to_dict() for client in clients]
-    }
+    }, 200
     
 def update_client(user_id, data):
     client = ClientProfile.query.filter_by(user_id=user_id).first()

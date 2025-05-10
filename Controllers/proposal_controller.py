@@ -45,3 +45,36 @@ def create_proposal(data):
         "errors": "None",
         "data": new_proposal.to_dict()
     }, 200
+    
+def get_all_freelancer_proposals(freelancer_id):
+    proposals = Proposal.query.filter_by(freelancer_id=freelancer_id).all()
+    if not proposals:
+        raise NotFoundError(field="freelancer_id", value=freelancer_id)
+    
+    return {
+        "message": f"{len(proposals)} propostas encontradas para o freelancer {freelancer_id}",
+        "errors": "None",
+        "data": [proposal.to_dict() for proposal in proposals]
+    }, 200
+
+def get_all_project_proposals(project_id):
+    proposals = Proposal.query.filter_by(projeto_id=project_id).all()
+    if not proposals:
+        raise NotFoundError(field="project_id", value=project_id)
+    
+    return {
+        "message": f"{len(proposals)} propostas encontradas para o projeto {project_id}",
+        "errors": "None",
+        "data": [proposal.to_dict() for proposal in proposals]
+    }, 200
+    
+def get_proposal_by_id(proposal_id):
+    proposal = Proposal.query.filter_by(id=proposal_id).first()
+    if not proposal:
+        raise NotFoundError(field="proposal_id", value=proposal_id)
+    
+    return {
+        "message": f"Proposta com ID {proposal_id} encontrada",
+        "errors": "None",
+        "data": proposal.to_dict()
+    }, 200

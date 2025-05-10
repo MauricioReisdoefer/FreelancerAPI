@@ -78,3 +78,41 @@ def get_proposal_by_id(proposal_id):
         "errors": "None",
         "data": proposal.to_dict()
     }, 200
+    
+def update_proposal(proposal_id, data):
+    proposal = Proposal.query.filter_by(id=proposal_id).first()
+    if not proposal:
+        raise NotFoundError(field="proposal_id", value=proposal_id)
+
+    if proposal.status != 'pendente':
+        raise ConflictError(detail="Propostas só podem ser editadas enquanto estão pendentes.")
+
+    preco = data.get("preco")
+    descricao = data.get("descricao")
+
+    if preco is not None:
+        proposal.preco = preco
+    if descricao is not None:
+        proposal.descricao = descricao
+
+    db.session.commit()
+
+    return {
+        "message": f"Proposta {proposal_id} atualizada com sucesso.",
+        "errors": "None",
+        "data": proposal.to_dict()
+    }, 200
+    
+def remove_proposal(proposal_id):
+    proposal = Proposal.query.filter_by(id=proposal_id).first()
+    if not proposal:
+        raise NotFoundError(field="proposal_id", value=proposal_id)
+
+    db.session.delete(proposal)
+    db.session.commit()
+
+    return {
+        "message": f"Proposta {proposal_id} removida com sucesso.",
+        "errors": "None",
+        "data": proposal.to_dict()
+    }, 200

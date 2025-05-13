@@ -7,7 +7,6 @@ from error import ValidationError, ConflictError, NotFoundError, UnauthorizedErr
 
 def create_complete_user(data):
     user_response, status_code = create_user(data)
-
     user_data = user_response["data"]
     user_id = user_data["id"]
     is_freelancer = user_data["is_freelancer"]
@@ -34,6 +33,23 @@ def create_complete_user(data):
     return {
         "message": "Usuário completo criado com sucesso",
         "errors": None,
-        "user_data": user_data,
-        "profile_data": profile_response["data"]
+        "data": {
+            "user_data": user_data,
+            "profile_data": profile_response["data"]
+        }
     }, status_code
+
+def get_complete_user(id):
+    user, status_code = get_user_by_id(id=id)
+    if user.get("data").get("is_freelancer") == True:
+        profile, status = get_freelancer_profile(user_id=id)
+    else:
+        profile, status = get_client_profile_by_user_id(user_id=id)
+    return {
+        "message": "Usuário encontrado com sucesso",
+        "errors": None,
+       "data": {
+            "user_data": user,
+            "profile_data": profile
+        }
+    }, 200

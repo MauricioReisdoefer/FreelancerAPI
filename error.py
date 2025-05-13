@@ -83,6 +83,7 @@ class NotFoundError(AppError):
         if self.field and self.value is not None:
             data['not_found'] = {self.field: self.value}
         return data
+    
 class UnauthorizedError(AppError):
     """
     Classe de erro para acessos não autorizados (HTTP 401).

@@ -1,4 +1,5 @@
 from ..Extensions import db
+from .proposal import Proposal
 
 class Freelancer(db.Model):
     __tablename__ = 'freelancer'

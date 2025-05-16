@@ -35,7 +35,7 @@ def create_complete_user(data):
         "errors": None,
         "data": {
             "user_data": user_data,
-            "profile_data": profile_response["data"]
+            "profile_data": profile_response.get("data")
         }
     }, status_code
 
@@ -49,7 +49,44 @@ def get_complete_user(id):
         "message": "Usuário encontrado com sucesso",
         "errors": None,
        "data": {
-            "user_data": user,
-            "profile_data": profile
+            "user_data": user.get("data"),
+            "profile_data": profile.get("data")
+        }
+    }, 200
+    
+def update_complete_user(data):
+    user, status_code = update_user(data.get("user"))
+    if user.get("data").get("is_freelancer") == True:
+        profile, stauts = update_freelancer(data.get("profile"))
+    else:
+        profile, status = update_client(data.get("profile"))
+    return {
+        "message":"Usuário modificado com sucesso",
+        "errors":None,
+        "data":{
+            "user_data":user.get("data"),
+            "profile_data":profile.get("data")
+        }
+    }
+
+def remove_complete_user(id):
+    user_response, status_code = get_user_by_id(id)
+    
+    user_data = user_response.get("data")
+    is_freelancer = user_data.get("is_freelancer")
+
+    if is_freelancer:
+        profile_response, status = remove_freelancer(user_id=id)
+    else:
+        profile_response, status = remove_client(user_id=id)
+
+    user_deleted, user_status = remove_user(id)
+
+    return {
+        "message": "Usuário completo removido com sucesso",
+        "errors": None,
+        "data": {
+            "user_data": user_deleted.get("data"),
+            "profile_data": profile_response.get("data")
         }
     }, 200
